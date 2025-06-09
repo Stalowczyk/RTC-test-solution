@@ -70,3 +70,12 @@ export function parseSimulationLine(line: string[]): SimulationData | null {
 		scores: parseStringToScores(line[7]),
 	};
 }
+
+/**
+ * Converts parsed lines array into array of SimulationData objects
+ */
+export function parseAllLines(parsedLines: string[][]): SimulationData[] {
+	return parsedLines
+		.map(parseSimulationLine)
+		.filter((data): data is SimulationData => data !== null);
+}
