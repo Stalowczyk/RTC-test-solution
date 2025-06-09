@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { parseSimulationData, parseStringToScores } from "../../src/utils/parser";
+import {
+	parseSimulationData,
+	parseSimulationLine,
+	parseStringToScores,
+} from "../../src/utils/parser";
 
 describe("parseSimulationData", () => {
 	it("splits simulation string into individual lines", () => {
@@ -81,6 +85,57 @@ describe("parseStringToScores", () => {
 		]);
 		expect(errorSpy).toHaveBeenCalledWith(
 			expect.stringContaining("Invalid score data empty score:")
+		);
+		errorSpy.mockRestore();
+	});
+});
+
+describe("parseSimulationLine", () => {
+	it("Converts parsed line into SimulationData object", () => {
+		const line = [
+			"e06ea218-da07-42be-9016-c8bd5abdd592", // sportEventId
+			"f306b9a6-2757-4076-bcb6-562a5c5f7dfd", // sportId
+			"cdc9ffd2-6b1d-4d3f-a318-d347eb8d6910", // competitionId
+			"1749427786936", // startTime
+			"eae40851-11a7-42c0-ab3b-30c539c91623", // homeCompetitorId
+			"b44c3433-d058-4ddb-a192-929491e48b90", // awayCompetitorId
+			"6e843915-f3b1-492e-9185-4318704385a0", // sportEventStatusId
+			"0e022e3d-620f-430d-a0ba-460e5ad4b6eb@5:10|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10", // scores
+		];
+
+		expect(parseSimulationLine(line)).toEqual({
+			sportEventId: "e06ea218-da07-42be-9016-c8bd5abdd592",
+			sportId: "f306b9a6-2757-4076-bcb6-562a5c5f7dfd",
+			competitionId: "cdc9ffd2-6b1d-4d3f-a318-d347eb8d6910",
+			startTime: "1749427786936",
+			homeCompetitorId: "eae40851-11a7-42c0-ab3b-30c539c91623",
+			awayCompetitorId: "b44c3433-d058-4ddb-a192-929491e48b90",
+			sportEventStatusId: "6e843915-f3b1-492e-9185-4318704385a0",
+			scores: [
+				{ competitorId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", score: "5:10" },
+				{ competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", score: "5:10" },
+			],
+		});
+	});
+
+	it("Logs an error when incoming line has more or less fields than the expected (8)", () => {
+		const line = [
+			"Additional field not included in the data Format",
+			"e06ea218-da07-42be-9016-c8bd5abdd592", // sportEventId
+			"f306b9a6-2757-4076-bcb6-562a5c5f7dfd", // sportId
+			"cdc9ffd2-6b1d-4d3f-a318-d347eb8d6910", // competitionId
+			"1749427786936", // startTime
+			"eae40851-11a7-42c0-ab3b-30c539c91623", // homeCompetitorId
+			"b44c3433-d058-4ddb-a192-929491e48b90", // awayCompetitorId
+			"6e843915-f3b1-492e-9185-4318704385a0", // sportEventStatusId
+			"0e022e3d-620f-430d-a0ba-460e5ad4b6eb@5:10|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10", // scores
+		];
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+		parseSimulationLine(line);
+
+		expect(errorSpy).toHaveBeenCalledWith(
+			expect.stringContaining("Invalid line format, expected 8 fields")
 		);
 		errorSpy.mockRestore();
 	});

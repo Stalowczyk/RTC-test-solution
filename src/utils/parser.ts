@@ -1,4 +1,4 @@
-import { Score } from "../types/simulation";
+import { Score, SimulationData } from "../types/simulation";
 
 interface SimulationRawData {
 	odds: string;
@@ -48,4 +48,25 @@ export function parseStringToScores(str: string): Score[] {
 			return { competitorId, score };
 		})
 		.filter((score): score is Score => score !== null);
+}
+
+/**
+ * Parses a single line into a SimulationData object
+ */
+export function parseSimulationLine(line: string[]): SimulationData | null {
+	if (line.length !== 8) {
+		console.error(`Invalid line format, expected 8 fields, got ${line.length}`);
+		return null;
+	}
+
+	return {
+		sportEventId: line[0],
+		sportId: line[1],
+		competitionId: line[2],
+		startTime: line[3],
+		homeCompetitorId: line[4],
+		awayCompetitorId: line[5],
+		sportEventStatusId: line[6],
+		scores: parseStringToScores(line[7]),
+	};
 }
