@@ -29,15 +29,15 @@ export function parseStringToScores(str: string): Score[] {
 		.map((entry) => {
 			const parts = entry.split("@");
 			if (parts.length !== 2) {
-				console.error(`Invalid score format (missing '@'): "${entry}"`);
+				console.error(`Invalid score format missing '@': "${entry}"`);
 				return null;
 			}
 
-			const competitorId = parts[0].trim();
+			const periodId = parts[0].trim();
 			const score = parts[1].trim();
 
-			if (!competitorId) {
-				console.error(`Invalid score data empty competitorId: "${entry}"`);
+			if (!periodId) {
+				console.error(`Invalid score data empty periodId: "${entry}"`);
 				return null;
 			}
 			if (!score) {
@@ -45,7 +45,13 @@ export function parseStringToScores(str: string): Score[] {
 				return null;
 			}
 
-			return { competitorId, score };
+			const [home, away] = score.split(":");
+			if (home === undefined || away === undefined) {
+				console.error(`Invalid score format missing ':': "${score}"`);
+				return null;
+			}
+
+			return { periodId, home, away };
 		})
 		.filter((score): score is Score => score !== null);
 }

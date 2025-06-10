@@ -1,6 +1,7 @@
 export interface Score {
-	competitorId: string;
-	score: string;
+	periodId: string;
+	home: string;
+	away: string;
 }
 
 export interface SimulationData {

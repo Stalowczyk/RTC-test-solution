@@ -35,8 +35,8 @@ describe("parseStringToScores", () => {
 		const parsedScores = parseStringToScores(scores);
 
 		expect(parsedScores).toEqual([
-			{ competitorId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", score: "5:10" },
-			{ competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", score: "5:10" },
+			{ periodId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", home: "5", away: "10" },
+			{ periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", home: "5", away: "10" },
 		]);
 	});
 
@@ -48,8 +48,9 @@ describe("parseStringToScores", () => {
 
 		expect(parseStringToScores(malformedString)).toEqual([
 			{
-				competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
-				score: "5:10",
+				periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
+				home: "5",
+				away: "10",
 			},
 		]);
 
@@ -57,18 +58,19 @@ describe("parseStringToScores", () => {
 		errorSpy.mockRestore();
 	});
 
-	it(`Logs error message when a part of input score string is a missing competitorId`, () => {
+	it(`Logs error message when a part of input score string is a missing periodId`, () => {
 		const malformedString = "@5:10|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10";
 		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
 		expect(parseStringToScores(malformedString)).toEqual([
 			{
-				competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
-				score: "5:10",
+				periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
+				home: "5",
+				away: "10",
 			},
 		]);
 		expect(errorSpy).toHaveBeenCalledWith(
-			expect.stringContaining("Invalid score data empty competitorId:")
+			expect.stringContaining("Invalid score data empty periodId")
 		);
 		errorSpy.mockRestore();
 	});
@@ -80,13 +82,32 @@ describe("parseStringToScores", () => {
 
 		expect(parseStringToScores(malformedString)).toEqual([
 			{
-				competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
-				score: "5:10",
+				periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
+				home: "5",
+				away: "10",
 			},
 		]);
 		expect(errorSpy).toHaveBeenCalledWith(
 			expect.stringContaining("Invalid score data empty score:")
 		);
+		errorSpy.mockRestore();
+	});
+
+	it(`Logs error message when a part of input score string is missing ":"`, () => {
+		const malformedString =
+			"0e022e3d-620f-430d-a0ba-460e5ad4b6eb@510|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10";
+
+		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+		expect(parseStringToScores(malformedString)).toEqual([
+			{
+				periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2",
+				home: "5",
+				away: "10",
+			},
+		]);
+
+		expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("missing ':'"));
 		errorSpy.mockRestore();
 	});
 });
@@ -113,8 +134,8 @@ describe("parseSimulationLine", () => {
 			awayCompetitorId: "b44c3433-d058-4ddb-a192-929491e48b90",
 			sportEventStatusId: "6e843915-f3b1-492e-9185-4318704385a0",
 			scores: [
-				{ competitorId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", score: "5:10" },
-				{ competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", score: "5:10" },
+				{ periodId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", home: "5", away: "10" },
+				{ periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", home: "5", away: "10" },
 			],
 		});
 	});
@@ -161,8 +182,8 @@ describe("parseAllLines", () => {
 				awayCompetitorId: "b44c3433-d058-4ddb-a192-929491e48b90",
 				sportEventStatusId: "6e843915-f3b1-492e-9185-4318704385a0",
 				scores: [
-					{ competitorId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", score: "5:10" },
-					{ competitorId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", score: "5:10" },
+					{ periodId: "0e022e3d-620f-430d-a0ba-460e5ad4b6eb", home: "5", away: "10" },
+					{ periodId: "664507b3-f483-4f31-a8bc-2c56a13df6b2", home: "5", away: "10" },
 				],
 			},
 		]);
