@@ -47,6 +47,7 @@ export class StateManager {
 				if (ev && !ev.removed) {
 					ev.removed = true;
 					ev.status = "REMOVED";
+					this.events.set(id, ev);
 				}
 			}
 		}
@@ -151,6 +152,7 @@ export class StateManager {
 				`Status changed for event ${oldEvent.sportEventId}: ${oldEvent.status} → ${newEvent.status}`
 			);
 		}
+		// Deep compare scores arrays by JSON.stringify, can be improved but good enough for now
 		if (JSON.stringify(oldEvent.scores) !== JSON.stringify(newEvent.scores)) {
 			console.log(`Score changed for event ${oldEvent.sportEventId}`);
 		}

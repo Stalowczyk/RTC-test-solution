@@ -199,4 +199,29 @@ describe("StateManager", () => {
 			competition: "NewTwo",
 		});
 	});
+
+	it("returns correct client state format from getClientState()", () => {
+		const sm = new StateManager(mappings);
+		sm.update(initialData);
+		const clientState = sm.getClientState();
+
+		expect(clientState).toHaveProperty("event-1");
+		expect(clientState["event-1"]).toMatchObject({
+			id: "event-1",
+			status: "ONGOING",
+			sport: "Real Madrid",
+			competition: "Barcelona",
+			competitors: {
+				HOME: { type: "HOME", name: "Real Madrid" },
+				AWAY: { type: "AWAY", name: "Barcelona" },
+			},
+			scores: {
+				CURRENT: {
+					type: "CURRENT",
+					home: "1",
+					away: "0",
+				},
+			},
+		});
+	});
 });
