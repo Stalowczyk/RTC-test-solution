@@ -45,7 +45,9 @@ describe("StateFetcher", () => {
 		const service = new StateFetcher(stateManager, "http://fake-url");
 		await service.fetchAndUpdateState();
 
-		expect(errorSpy).toHaveBeenCalledWith("Failed to fetch state: Service Unavailable");
+		expect(errorSpy).toHaveBeenCalledWith(
+			"Failed to fetch state from http://fake-url: Service Unavailable"
+		);
 
 		fetchSpy.mockRestore();
 		errorSpy.mockRestore();
@@ -62,7 +64,7 @@ describe("StateFetcher", () => {
 		await service.fetchAndUpdateState();
 
 		expect(errorSpy).toHaveBeenCalledWith(
-			"Invalid response: `odds` field is missing or not a string"
+			"Invalid response from http://fake-url: 'odds' field is missing or not a string"
 		);
 
 		fetchSpy.mockRestore();
@@ -76,7 +78,7 @@ describe("StateFetcher", () => {
 		const service = new StateFetcher(stateManager, "http://fake-url");
 		await service.fetchAndUpdateState();
 
-		expect(errorSpy).toHaveBeenCalledWith("Error updating state: server down");
+		expect(errorSpy).toHaveBeenCalledWith("Error updating state from http://fake-url: server down");
 
 		fetchSpy.mockRestore();
 		errorSpy.mockRestore();
@@ -94,7 +96,13 @@ describe("StateFetcher", () => {
 		clearSpy.mockRestore();
 	});
 
+	it("stop() does nothing if start was never called", () => {
+		const service = new StateFetcher(stateManager, "http://fake-url", 1000);
+		expect(() => service.stop()).not.toThrow();
+	});
+
 	it("fetches on interval trigger after start", async () => {
+		vi.useFakeTimers();
 		const fetchSpy = vi.fn().mockResolvedValue({
 			ok: true,
 			json: vi.fn().mockResolvedValue({ odds: "some-odds" }),
@@ -104,13 +112,13 @@ describe("StateFetcher", () => {
 		const service = new StateFetcher(stateManager, "http://fake-url", 50);
 		service.start();
 
-		await new Promise((resolve) => setTimeout(resolve, 70));
+		vi.advanceTimersByTime(100);
+
+		expect(fetchSpy).toHaveBeenCalledTimes(3);
 
 		service.stop();
-
-		expect(fetchSpy).toHaveBeenCalledTimes(2);
-
 		vi.unstubAllGlobals();
+		vi.useRealTimers();
 	});
 
 	it("does not create multiple intervals on repeated start calls", () => {
@@ -120,7 +128,7 @@ describe("StateFetcher", () => {
 		service.start();
 		service.start();
 
-		expect(setIntervalSpy).toHaveBeenCalledTimes(2);
+		expect(setIntervalSpy).toHaveBeenCalledTimes(1);
 
 		service.stop();
 		setIntervalSpy.mockRestore();
