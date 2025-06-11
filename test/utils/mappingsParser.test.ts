@@ -31,6 +31,14 @@ describe("parseMappings", () => {
 
 		errorSpy.mockRestore();
 	});
+
+	it("should handle trailing semicolon and whitespace correctly", () => {
+		const raw = "id1:Value One; id2 : Value Two ; ";
+		expect(parseMappings(raw)).toEqual({
+			id1: "Value One",
+			id2: "Value Two",
+		});
+	});
 });
 
 describe("resolve", () => {

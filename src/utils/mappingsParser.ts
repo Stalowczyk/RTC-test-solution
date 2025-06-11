@@ -23,6 +23,7 @@ export function parseMappings(str: string): MappingDict {
 
 /**
  * Resolves a value from dictionary using Id
+ * Returns undefined if Id not found
  */
 export function resolve(mapping: MappingDict, id: string): string {
 	const value = mapping[id];
