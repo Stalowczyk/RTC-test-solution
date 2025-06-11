@@ -6,7 +6,7 @@ const app = express();
 
 const stateManager = new StateManager({});
 
-const mappingsUrl = "http://localhost:300/api/mappings";
+const mappingsUrl = "http://localhost:3000/api/mappings";
 
 const mappingsFetcher = new MappingsFetcher(stateManager, mappingsUrl);
 mappingsFetcher.start();
