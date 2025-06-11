@@ -25,6 +25,30 @@ describe("parseSimulationData", () => {
 			"0e022e3d-620f-430d-a0ba-460e5ad4b6eb@5:10|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10",
 		]);
 	});
+
+	it("correctly parses multiple lines separated by newlines", () => {
+		const raw = {
+			odds: `id1,id2,id3,id4,id5,id6,id7,score1
+id8,id9,id10,id11,id12,id13,id14,score2`,
+		};
+
+		const parsed = parseSimulationData(raw);
+
+		expect(parsed.length).toBe(2);
+		expect(parsed[0][0]).toBe("id1");
+		expect(parsed[1][0]).toBe("id8");
+	});
+
+	it("handles empty lines", () => {
+		const raw = {
+			odds: "line1data\n\n",
+		};
+
+		const parsed = parseSimulationData(raw);
+
+		expect(parsed.length).toBe(1);
+		expect(parsed[0]).toEqual(["line1data"]);
+	});
 });
 
 describe("parseStringToScores", () => {
@@ -110,6 +134,10 @@ describe("parseStringToScores", () => {
 		expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("missing ':'"));
 		errorSpy.mockRestore();
 	});
+
+	it("returns empty array when input is empty string", () => {
+		expect(parseStringToScores("")).toEqual([]);
+	});
 });
 
 describe("parseSimulationLine", () => {
@@ -161,6 +189,15 @@ describe("parseSimulationLine", () => {
 		);
 		errorSpy.mockRestore();
 	});
+
+	it("returns SimulationData with empty scores array if score string is empty", () => {
+		const line = ["id1", "id2", "id3", "1234567890", "id5", "id6", "id7", ""];
+
+		const result = parseSimulationLine(line);
+
+		expect(result).not.toBeNull();
+		expect(result!.scores).toEqual([]);
+	});
 });
 
 describe("parseAllLines", () => {
@@ -203,5 +240,19 @@ describe("parseAllLines", () => {
 		);
 
 		errorSpy.mockRestore();
+	});
+
+	it("returns empty array when input parsed lines array is empty", () => {
+		expect(parseAllLines([])).toEqual([]);
+	});
+
+	it("filters out invalid lines and returns valid ones only", () => {
+		const validLine = ["id1", "id2", "id3", "1234567890", "id5", "id6", "id7", "id8@1:2"];
+		const invalidLine = ["too", "few", "fields"];
+
+		const result = parseAllLines([validLine, invalidLine]);
+
+		expect(result.length).toBe(1);
+		expect(result[0].sportEventId).toBe("id1");
 	});
 });
