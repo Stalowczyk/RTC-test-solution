@@ -1,6 +1,15 @@
 import express from "express";
+import { StateManager } from "./services/state";
+import { MappingsFetcher } from "./fetchers/mappingsFetcher";
 
 const app = express();
+
+const stateManager = new StateManager({});
+
+const mappingsUrl = "http://localhost:300/api/mappings";
+
+const mappingsFetcher = new MappingsFetcher(stateManager, mappingsUrl);
+mappingsFetcher.start();
 
 if (process.env.NODE_ENV === "test") {
 	app.get("/error", (req, res, next) => {

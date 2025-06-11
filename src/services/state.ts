@@ -125,4 +125,9 @@ export class StateManager {
 			console.log(`Score changed for event ${oldEvent.sportEventId}`);
 		}
 	}
+
+	public updateMappings(newMappings: MappingDict): void {
+		this.mappings = newMappings;
+		console.log("StateManager mappings updated");
+	}
 }

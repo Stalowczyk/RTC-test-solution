@@ -166,4 +166,37 @@ describe("StateManager", () => {
 
 		errorSpy.mockRestore();
 	});
+	it("updates mappings via updateMappings()", () => {
+		const initialMappings = parseMappings("1:One;2:Two;");
+		const newMappings = parseMappings("1:NewOne;2:NewTwo;");
+
+		const sm = new StateManager(initialMappings);
+
+		const sampleEvent: SimulationData[] = [
+			{
+				sportEventId: "e1",
+				sportId: "1",
+				competitionId: "2",
+				startTime: "1686000000000",
+				homeCompetitorId: "1",
+				awayCompetitorId: "2",
+				sportEventStatusId: "2",
+				scores: [],
+			},
+		];
+
+		sm.update(sampleEvent);
+		expect(sm.getVisibleState()[0]).toMatchObject({
+			sport: "One",
+			competition: "Two",
+		});
+
+		sm.updateMappings(newMappings);
+		sm.update(sampleEvent);
+
+		expect(sm.getVisibleState()[0]).toMatchObject({
+			sport: "NewOne",
+			competition: "NewTwo",
+		});
+	});
 });
