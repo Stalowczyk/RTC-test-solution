@@ -20,4 +20,11 @@ describe("express app", () => {
 
 		errorSpy.mockRestore();
 	});
+
+	it("should return the current visible state at /client/state", async () => {
+		const res = await request(app).get("/client/state");
+
+		expect(res.status).toBe(200);
+		expect(res.body).toBeTypeOf("object");
+	});
 });

@@ -1,5 +1,5 @@
-import { parseMappings } from "../services/mappings";
-import { StateManager } from "../services/state";
+import { parseMappings } from "../utils/mappingsParser";
+import { StateManager } from "../services/stateManager";
 
 export class MappingsFetcher {
 	private intervalId?: NodeJS.Timeout;

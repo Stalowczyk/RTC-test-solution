@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { parseMappings, resolve } from "../../src/services/mappings";
+import { parseMappings, resolve } from "../../src/utils/mappingsParser";
 import { MappingDict } from "../../src/types/mapping";
 
 describe("parseMappings", () => {

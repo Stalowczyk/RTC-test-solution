@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MappingsFetcher } from "../../src/fetchers/mappingsFetcher";
-import { StateManager } from "../../src/services/state";
+import { StateManager } from "../../src/services/stateManager";
 
 describe("MappingService", () => {
 	let stateManager: StateManager;

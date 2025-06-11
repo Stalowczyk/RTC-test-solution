@@ -1,7 +1,7 @@
 import { InternalEvent, VisibleEvent } from "../types/event";
 import { MappingDict } from "../types/mapping";
 import { SimulationData } from "../types/simulation";
-import { resolve } from "./mappings";
+import { resolve } from "../utils/mappingsParser";
 
 /**
  * Keeps track of sports events in memory
@@ -59,6 +59,36 @@ export class StateManager {
 		return Array.from(this.events.values())
 			.filter((event) => !event.removed)
 			.map(({ removed, ...visible }) => visible);
+	}
+
+	/**
+	 * Returns the visible state in the external API format
+	 */
+	public getClientState(): Record<string, any> {
+		const output: Record<string, any> = {};
+
+		for (const event of this.getVisibleState()) {
+			output[event.sportEventId] = {
+				id: event.sportEventId,
+				status: event.status,
+				startTime: event.startTime,
+				sport: event.sport,
+				competition: event.competition,
+				competitors: {
+					HOME: { type: "HOME", name: event.homeCompetitor },
+					AWAY: { type: "AWAY", name: event.awayCompetitor },
+				},
+				scores: {
+					CURRENT: {
+						type: "CURRENT",
+						home: event.scores?.[event.scores.length - 1]?.home ?? "0",
+						away: event.scores?.[event.scores.length - 1]?.away ?? "0",
+					},
+				},
+			};
+		}
+
+		return output;
 	}
 
 	/**

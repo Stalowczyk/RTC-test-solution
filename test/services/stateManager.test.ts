@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { parseMappings } from "../../src/services/mappings";
-import { StateManager } from "../../src/services/state";
+import { parseMappings } from "../../src/utils/mappingsParser";
+import { StateManager } from "../../src/services/stateManager";
 import { SimulationData } from "../../src/types/simulation";
 
 const rawMappingStr =

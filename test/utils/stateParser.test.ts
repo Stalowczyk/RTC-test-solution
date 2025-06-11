@@ -4,7 +4,7 @@ import {
 	parseSimulationData,
 	parseSimulationLine,
 	parseStringToScores,
-} from "../../src/utils/parser";
+} from "../../src/utils/stateParser";
 
 describe("parseSimulationData", () => {
 	it("splits simulation string into individual lines", () => {
