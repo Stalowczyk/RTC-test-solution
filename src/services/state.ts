@@ -108,9 +108,10 @@ export class StateManager {
 	/**
 	 * helper to check that all arguments are defined (not undefined or null)
 	 */
-	private allDefined(...args: any[]): boolean {
+	private allDefined(...args: (string | undefined | null)[]): boolean {
 		return args.every((val) => val !== undefined && val !== null);
 	}
+
 	/**
 	 * Logs changes between old and incoming event data
 	 */
