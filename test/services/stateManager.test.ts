@@ -72,7 +72,9 @@ describe("StateManager", () => {
 		expect(consoleLogSpy).toHaveBeenCalledWith(
 			"Status changed for event event-1: ONGOING → REMOVED"
 		);
-		expect(consoleLogSpy).toHaveBeenCalledWith("Score changed for event event-1");
+		expect(consoleLogSpy).toHaveBeenCalledWith(
+			"Score changed for event event-1 (Real Madrid - Barcelona)"
+		);
 
 		const allEvents = sm.getVisibleState();
 

@@ -154,7 +154,9 @@ export class StateManager {
 		}
 		// Deep compare scores arrays by JSON.stringify, can be improved but good enough for now
 		if (JSON.stringify(oldEvent.scores) !== JSON.stringify(newEvent.scores)) {
-			console.log(`Score changed for event ${oldEvent.sportEventId}`);
+			console.log(
+				`Score changed for event ${oldEvent.sportEventId} (${oldEvent.homeCompetitor} - ${oldEvent.awayCompetitor})`
+			);
 		}
 	}
 
