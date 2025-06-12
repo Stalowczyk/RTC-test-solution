@@ -11,7 +11,7 @@ export class MappingsFetcher {
 	private updateIntervalMs: number;
 	private stateManager: StateManager;
 
-	constructor(stateManager: StateManager, url: string, updateIntervalMs = 60_000) {
+	constructor(stateManager: StateManager, url: string, updateIntervalMs = 10_000) {
 		this.stateManager = stateManager;
 		this.url = url;
 		this.updateIntervalMs = updateIntervalMs;
