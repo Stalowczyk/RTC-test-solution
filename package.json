@@ -4,7 +4,7 @@
 	"description": "SR",
 	"main": "index.js",
 	"scripts": {
-		"start": "ts-node src/index.ts",
+		"start": "node dist/index.js",
 		"build": "tsc --project tsconfig.build.json",
 		"test": "vitest run --coverage"
 	},

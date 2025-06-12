@@ -1,7 +1,17 @@
-version: '3'
+version: "3"
 
 services:
   simulation:
     image: mysteriouscrawler/test
     ports:
       - "3000:3000"
+
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    depends_on:
+      - simulation
+    environment:
+      SIMULATION_HOST: simulation
+      SIMULATION_PORT: 3000

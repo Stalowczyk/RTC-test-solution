@@ -6,8 +6,11 @@ import { StateFetcher } from "./fetchers/stateFetcher";
 const app = express();
 
 const stateManager = new StateManager({});
-const mappingsUrl = "http://localhost:3000/api/mappings";
-const stateUrl = "http://localhost:3000/api/state";
+const SIMULATION_HOST = process.env.SIMULATION_HOST || "localhost";
+const SIMULATION_PORT = process.env.SIMULATION_PORT || "3000";
+
+const mappingsUrl = `http://${SIMULATION_HOST}:${SIMULATION_PORT}/api/mappings`;
+const stateUrl = `http://${SIMULATION_HOST}:${SIMULATION_PORT}/api/state`;
 
 const mappingsFetcher = new MappingsFetcher(stateManager, mappingsUrl);
 // Start fetching the mappings and updating stateManager
@@ -38,7 +41,7 @@ app.use((err, req, res, next) => {
 	res.status(500).json({ error: "Internal Server Error" });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 function shutdown() {
