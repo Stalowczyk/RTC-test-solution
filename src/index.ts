@@ -6,13 +6,15 @@ import { StateFetcher } from "./fetchers/stateFetcher";
 const app = express();
 
 const stateManager = new StateManager({});
-
 const mappingsUrl = "http://localhost:3000/api/mappings";
 const stateUrl = "http://localhost:3000/api/state";
 
 const mappingsFetcher = new MappingsFetcher(stateManager, mappingsUrl);
+// Start fetching the mappings and updating stateManager
 mappingsFetcher.start();
+
 const stateFetcher = new StateFetcher(stateManager, stateUrl);
+// Start fetching from the state api and updating stateManager
 stateFetcher.start();
 
 app.get("/client/state", (req, res) => {
