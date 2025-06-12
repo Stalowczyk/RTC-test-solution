@@ -168,25 +168,14 @@ describe("parseSimulationLine", () => {
 		});
 	});
 
-	it("Logs an error when incoming line has more or less fields than the expected (8)", () => {
-		const line = [
-			"Additional field not included in the data Format",
-			"e06ea218-da07-42be-9016-c8bd5abdd592", // sportEventId
-			"f306b9a6-2757-4076-bcb6-562a5c5f7dfd", // sportId
-			"cdc9ffd2-6b1d-4d3f-a318-d347eb8d6910", // competitionId
-			"1749427786936", // startTime
-			"eae40851-11a7-42c0-ab3b-30c539c91623", // homeCompetitorId
-			"b44c3433-d058-4ddb-a192-929491e48b90", // awayCompetitorId
-			"6e843915-f3b1-492e-9185-4318704385a0", // sportEventStatusId
-			"0e022e3d-620f-430d-a0ba-460e5ad4b6eb@5:10|664507b3-f483-4f31-a8bc-2c56a13df6b2@5:10", // scores
-		];
+	it("Logs an error when incoming line has fewer than 7 fields", () => {
+		const line = ["too", "few", "fields"];
 		const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
 		parseSimulationLine(line);
 
-		expect(errorSpy).toHaveBeenCalledWith(
-			expect.stringContaining("Invalid line format, expected 8 fields")
-		);
+		expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("expected at least 7 fields"));
+
 		errorSpy.mockRestore();
 	});
 
@@ -236,7 +225,7 @@ describe("parseAllLines", () => {
 		expect(result).toEqual([]);
 
 		expect(errorSpy).toHaveBeenCalledWith(
-			expect.stringContaining("Invalid line format, expected 8 fields")
+			expect.stringContaining("Invalid line format, expected at least 7 fields")
 		);
 
 		errorSpy.mockRestore();

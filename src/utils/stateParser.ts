@@ -60,8 +60,8 @@ export function parseStringToScores(str: string): Score[] {
  * Parses a single line into a SimulationData object
  */
 export function parseSimulationLine(line: string[]): SimulationData | null {
-	if (line.length !== 8) {
-		console.error(`Invalid line format, expected 8 fields, got ${line.length}`);
+	if (line.length < 7) {
+		console.error(`Invalid line format, expected at least 7 fields, got ${line.length}`);
 		return null;
 	}
 
@@ -73,7 +73,8 @@ export function parseSimulationLine(line: string[]): SimulationData | null {
 		homeCompetitorId: line[4],
 		awayCompetitorId: line[5],
 		sportEventStatusId: line[6],
-		scores: parseStringToScores(line[7]),
+		// If score field exists we use it else empty array
+		scores: line[7] ? parseStringToScores(line[7]) : [],
 	};
 }
 
